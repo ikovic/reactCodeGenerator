@@ -1,0 +1,32 @@
+{
+  "name": "react-code-generator",
+  "version": "1.0.0",
+  "description": "CLI tool for generating React components code",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ikovic/reactCodeGenerator.git"
+  },
+  "keywords": [
+    "React"
+  ],
+  "author": "ikovic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ikovic/reactCodeGenerator/issues"
+  },
+  "homepage": "https://github.com/ikovic/reactCodeGenerator#readme",
+  "dependencies": {
+    "camelcase": "^4.0.0",
+    "capitalize": "^1.0.0",
+    "dot": "^1.1.1",
+    "reserved-words": "^0.1.1"
+  },
+  "bin": {
+    "generate": "./index.js"
+  }
+}
