@@ -11,13 +11,14 @@ const reserved = require('reserved-words');
 const templatesDir = path.join(__dirname, 'templates');
 
 var component = {
-    name: 'Default',
-    id: 'default'
+    name: '',
+    id: ''
 };
 
 // parse command line arguments
 if (process.argv.length < 3) {
-    console.log('No class name provided - used default instead!');
+    console.log('No component name provided!');
+    return;
 } else {
     let componentName = process.argv[2];
     if (reserved.check(componentName, 'es2015')) {
@@ -36,8 +37,7 @@ fs.readFile(path.join(templatesDir, 'component.js'), 'utf8', function (err, data
         let template = doT.template(data);
         let output = template(component);
         let fileName = component.id + '.js';
-        let outputLocation = path.join(__dirname, 'output', fileName);
-        fs.writeFile(outputLocation, output, function (err) {
+        fs.writeFile(fileName, output, function (err) {
             if (err) {
                 console.log(err);
             }
