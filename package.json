@@ -1,6 +1,6 @@
 {
   "name": "react-code-generator",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "CLI tool for generating React components code",
   "main": "index.js",
   "scripts": {
