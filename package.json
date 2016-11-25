@@ -27,6 +27,6 @@
     "reserved-words": "^0.1.1"
   },
   "bin": {
-    "generate": "./index.js"
+    "generate-component": "./index.js"
   }
 }
