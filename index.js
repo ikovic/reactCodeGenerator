@@ -40,6 +40,8 @@ fs.readFile(path.join(templatesDir, 'component.js'), 'utf8', function (err, data
         fs.writeFile(fileName, output, function (err) {
             if (err) {
                 console.log(err);
+            } else {
+                console.log('Created component: ' + fileName);
             }
         })
     }
