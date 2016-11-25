@@ -2,10 +2,13 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
 const doT = require('dot');
 const camelCase = require('camelcase');
 const capitalize = require('capitalize');
 const reserved = require('reserved-words');
+
+const templatesDir = path.join(__dirname, 'templates');
 
 var component = {
     name: 'Default',
@@ -25,7 +28,7 @@ if (process.argv.length < 3) {
     component.id = camelCase(component.name);
 }
 
-fs.readFile('./templates/component.js', 'utf8', function (err, data) {
+fs.readFile(path.join(templatesDir, 'component.js'), 'utf8', function (err, data) {
     if (err) {
         console.log(err);
     } else {
@@ -33,7 +36,8 @@ fs.readFile('./templates/component.js', 'utf8', function (err, data) {
         let template = doT.template(data);
         let output = template(component);
         let fileName = component.id + '.js';
-        fs.writeFile('./output/' + fileName, output, function (err) {
+        let outputLocation = path.join(__dirname, 'output', fileName);
+        fs.writeFile(outputLocation, output, function (err) {
             if (err) {
                 console.log(err);
             }
