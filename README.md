@@ -17,6 +17,8 @@ Usage
 Run the generator with the following command:
 
 ```sh
-generate-component <componentName>
+generate-component <componentName> (-p)
 ```
-This will result in creating a fresh JavaScript file in the current location (where you called the command from). Name of the file will be according to <componentName> argument, and it will contain a React component implemented as a ES6 module.
+This will result in creating a fresh JavaScript file in the current location (where you called the command from). Name of the file will be according to <componentName> argument.
+
+If you use the '-p' flag, then the generated component will be written as a stateless functional component. Otherwise, a container component will be created as an ES6 module.
