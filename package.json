@@ -24,6 +24,7 @@
     "camelcase": "^4.0.0",
     "capitalize": "^1.0.0",
     "dot": "^1.1.1",
+    "minimist": "^1.2.0",
     "reserved-words": "^0.1.1"
   },
   "bin": {

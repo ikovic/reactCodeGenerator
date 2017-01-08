@@ -4,45 +4,97 @@
 const fs = require('fs');
 const path = require('path');
 const doT = require('dot');
+const minimist = require('minimist');
 const camelCase = require('camelcase');
 const capitalize = require('capitalize');
 const reserved = require('reserved-words');
 
 const templatesDir = path.join(__dirname, 'templates');
+const config = getConfigFromArgs(process.argv.slice(2));
 
-var component = {
-    name: '',
-    id: ''
-};
-
-// parse command line arguments
-if (process.argv.length < 3) {
-    console.log('No component name provided!');
-    return;
-} else {
-    let componentName = process.argv[2];
-    if (reserved.check(componentName, 'es2015')) {
-        console.log('You have entered a reserved ES6 keyword!');
-        return;
-    }
-    component.name = capitalize(camelCase(componentName));
-    component.id = camelCase(component.name);
+if (!validateConfig(config)) {
+  displayHelp();
+  return;
 }
 
-fs.readFile(path.join(templatesDir, 'component.js'), 'utf8', function (err, data) {
-    if (err) {
-        console.log(err);
-    } else {
-        doT.templateSettings.strip = false;
-        let template = doT.template(data);
-        let output = template(component);
-        let fileName = component.id + '.js';
-        fs.writeFile(fileName, output, function (err) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log('Created component: ' + fileName);
-            }
-        })
-    }
-});
+formatConfig(config);
+loadTemplate(config)
+  .then(template => {
+    let source = interpolateTemplate(config, template);
+    let fileName = config.id + '.js';
+    return saveSource(fileName, source);
+  })
+  .then(outputFileName => {
+    console.log('Created component: ' + outputFileName);
+  })
+  .catch(error => {
+    console.log(error);
+  });
+
+function getConfigFromArgs(argv) {
+  let parsedArgs = minimist(argv, {
+    boolean: 'presentation',
+    alias: {h: 'help', presentation: 'p'}
+  });
+
+  return {
+    name: parsedArgs._[0],
+    presentation: parsedArgs.presentation
+  }
+}
+
+function validateConfig(config) {
+  if (!config.name) {
+    console.log('No component name provided!');
+    return false;
+  }
+  if (reserved.check(config.name, 'es2015')) {
+    console.log('You have entered a reserved ES6 keyword as a component name!');
+    return false;
+  }
+
+  return true;
+}
+
+function formatConfig(config) {
+  config.name = capitalize(camelCase(config.name));
+  config.id = camelCase(config.name);
+}
+
+function loadTemplate(config) {
+  return new Promise((resolve, reject) => {
+    const templateFileName = getTemplateFileName(config);
+    fs.readFile(path.join(templatesDir, templateFileName), 'utf8', function (err, data) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  })
+}
+
+function getTemplateFileName(config) {
+  return config.presentation ? 'presentation.js' : 'container.js';
+}
+
+function interpolateTemplate(config, templateSource) {
+  doT.templateSettings.strip = false;
+  let template = doT.template(templateSource);
+  return template(config);
+}
+
+function saveSource(fileName, source) {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(fileName, source, function (err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(fileName);
+      }
+    })
+  });
+}
+function displayHelp() {
+  console.log('Usage: generate-component [name] (-p)');
+}

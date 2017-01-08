@@ -15,6 +15,6 @@ class {{=it.name}} extends Component {
     render() {
         return (
             <div id="{{=it.id}}"></div>
-        );
+    );
     }
 }
